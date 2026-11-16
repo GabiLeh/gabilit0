@@ -72,7 +72,7 @@ function formatMoney(amount) {
 
 async function carregarEstoqueReal() {
     if (!db) return;
-    const { data, error } = await db.from('estoque').select('*');
+    const { data, error } = await db.from('estoque-gabilit0').select('*');
     if (data) {
         data.forEach(itemBanco => {
             const prod = productsData.find(p => p.id === itemBanco.id);
@@ -312,7 +312,7 @@ async function finishOrder(e) {
                     if (product) {
                         const novoEstoque = Math.max(0, product.stock - item.qty);
                         product.stock = novoEstoque;
-                        await db.from('estoque').update({ stock: novoEstoque }).eq('id', product.id);
+                        await db.from('estoque-gabilit0').update({ stock: novoEstoque }).eq('id', product.id);
                     }
                 }
             }
