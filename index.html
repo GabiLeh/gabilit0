@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[gabilit0 STORE]</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="top-bar">
+        <span>C:\gabilit0\STORE_WEBHOOK.EXE</span>
+        <div class="win-btns">
+            <span>_</span><span>□</span><span>X</span>
+        </div>
+    </div>
+
+    <header>
+        <div>
+            <div class="glitch-title">gabilit0 STORE</div>
+            <div class="subtitle">[ BEADS, UPCYCLED TEES & ACCESSORIES ]</div>
+        </div>
+        <div class="header-right">
+            <select class="currency-select" id="currency-selector" onchange="changeCurrency()">
+                <option value="USD">$ USD (International)</option>
+                <option value="EUR">€ EUR (Europe)</option>
+                <option value="BRL">R$ BRL (Brasil)</option>
+            </select>
+            <button class="cart-status-btn" onclick="openCheckout()">
+                🛒 [<span id="header-count">0</span>]
+            </button>
+        </div>
+    </header>
+
+    <div class="marquee-box">
+        <marquee scrollamount="4">
+            // WORLDWIDE SHIPPING FROM BRAZIL //
+        </marquee>
+    </div>
+
+    <div class="main-grid">
+        <aside>
+            <div class="box-title">// CATEGORIES</div>
+            <ul class="filter-list">
+                <li><button class="filter-btn active" onclick="filterProducts('all', this)">&gt; ALL_ITEMS</button></li>
+                <li><button class="filter-btn" onclick="filterProducts('micangas', this)">&gt; BEADS & EARRINGS</button></li>
+                <li><button class="filter-btn" onclick="filterProducts('chaveiros', this)">&gt; KEYCHAINS</button></li>
+                <li><button class="filter-btn" onclick="filterProducts('pulseiras', this)">&gt; BRACELETS</button></li>
+                <li><button class="filter-btn" onclick="filterProducts('blusas', this)">&gt; UPCYCLED TEES</button></li>
+            </ul>
+
+            <div class="box-title">// YOUR_CART</div>
+            <div class="mini-cart">
+                <div class="cart-items" id="cart-items">
+                    <span style="color:#666;">[ Empty cart ]</span>
+                </div>
+                <div class="cart-total">TOTAL: <span id="cart-total">$0.00</span></div>
+                <button class="checkout-btn" onclick="openCheckout()">[ CHECKOUT ]</button>
+            </div>
+        </aside>
+
+        <main>
+            <div class="store-header">
+                <span style="color:#b8291e; font-weight:bold;">// PRODUCTS CATALOG</span>
+                <span id="item-counter" style="font-size:11px; color:#888;">5 items</span>
+            </div>
+
+            <div class="products-grid" id="products-grid"></div>
+        </main>
+    </div>
+
+    <footer>
+        <div>gabilit0 STORE // WORLDWIDE SHIPPING // DM ME ON DC OR TIKTOK</div>
+    </footer>
+</div>
+
+<div class="modal-overlay" id="checkout-modal">
+    <div class="modal-window">
+        <div class="top-bar">
+            <span>CHECKOUT_WIZARD.EXE</span>
+            <div class="win-btns">
+                <span onclick="closeCheckout()">X</span>
+            </div>
+        </div>
+        <div class="modal-body">
+            <p style="color:#b8291e; font-weight:bold; margin-bottom:8px;">// ORDER SUMMARY</p>
+            <div id="modal-summary" style="background:#0d0d0d; border:1px solid #333; padding:8px; margin-bottom:12px; font-size:12px;"></div>
+
+            <div class="shipping-box">
+                <p style="font-weight:bold; margin-bottom:4px; color:#e6e2d8;">// DISTANCE FREIGHT CALCULATOR</p>
+                <label>ZIP Code or Brazilian CEP (Shipped from SP, Brazil):</label>
+                <div class="cep-row">
+                    <input type="text" id="user-cep" placeholder="e.g. 01001-000 or 90210 or SW1A">
+                    <button class="calc-cep-btn" type="button" onclick="calcularFretePorDistancia()">CALCULATE</button>
+                </div>
+                <div id="shipping-result" style="font-size:11px; color:#00ff41; margin-top:6px;">Enter postal code to calculate shipping.</div>
+            </div>
+            
+            <div class="cart-total" style="color:red;">WARNING: <span style="color:red;">Estimated shipping (final quote confirmed on DM)</span></div>
+
+            <form onsubmit="finishOrder(event)">
+                <label id="label-contact-name">Your Discord Username (so I can add you):</label>
+                <input type="text" id="cust-contact-info" required placeholder="e.g. @username">
+
+                <button type="submit" id="submit-order-btn" class="checkout-btn">[ SEND ORDER ]</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
