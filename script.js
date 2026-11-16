@@ -1,5 +1,5 @@
 const DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/1571679844792795136/3ogd0zsjhy_3Dh7OG4BJgpDXB5gw-9UBXfBY2PNwrl4FtGwknCfBfoIJzJComFEmJiXH";
-const SUPABASE_URL = "https://dyuqpfsiximnessphbqz.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://dyuqpfsiximnessphbqz.supabase.co/";
 const SUPABASE_KEY = "sb_publishable_TmMgGbPf1P8ME1YYLQdVfw_Xv7IQkEV";
 
 let db = null;
