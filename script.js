@@ -11,11 +11,13 @@ const productsData = [
     {
         id: 1,
         category: "micangas",
-        badge: "", title: 'PHONE CHAIN "A THOUSAND SUNS"',
+        badge: "",
+        title: 'PHONE CHAIN "A THOUSAND SUNS"',
         desc: "A handmade beaded phone chain inspired by A Thousand Suns.",
         prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
         stock: 1,
-        img: "ATSphonechain.jpg" },
+        img: "ATSphonechain.jpg"
+    },
     {
         id: 2,
         category: "micangas",
@@ -34,7 +36,8 @@ const productsData = [
         desc: "A handmade beaded bracelet inspired by the 1997 Xero demo.",
         prices: { BRL: 15.00, USD: 4.00, EUR: 3.50 },
         stock: 1,
-        img: "Xpulseira.jpg" },
+        img: "Xpulseira.jpg"
+    },
     {
         id: 4,
         category: "pulseiras",
@@ -73,6 +76,10 @@ function formatMoney(amount) {
 async function carregarEstoqueReal() {
     if (!db) return;
     const { data, error } = await db.from('estoque-gabilit0').select('*');
+    if (error) {
+        console.error("Erro Supabase:", error);
+        return;
+    }
     if (data) {
         data.forEach(itemBanco => {
             const prod = productsData.find(p => p.id === itemBanco.id);
@@ -109,25 +116,25 @@ function renderProducts() {
         if (prod.stock === 0) card.style.opacity = '0.65';
 
         card.innerHTML = `
-                <div>
-                    <div class="product-img">
-                        ${badgeHtml}
-                        <img src="${prod.img}" alt="${prod.title}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                        <span style="display:none; font-size:10px;">[ IMG_${prod.id}.JPG ]</span>
-                    </div>
-                    <div class="product-title">${prod.title}</div>
-                    <div class="product-desc">${prod.desc}</div>
+            <div>
+                <div class="product-img">
+                    ${badgeHtml}
+                    <img src="${prod.img}" alt="${prod.title}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span style="display:none; font-size:10px;">[ IMG_${prod.id}.JPG ]</span>
                 </div>
-                <div class="product-footer">
-                    <div class="price-row">
-                        <span class="price">${priceFormatted}</span>
-                        <span style="font-size:10px; font-weight:bold; color:${stockColor};">${stockText}</span>
-                    </div>
-                    <button class="add-btn" onclick="addToCart(${prod.id})" ${isOutOfStock ? 'disabled style="background:#222; color:#ff4d4d; border:1px solid #444; cursor:not-allowed;"' : ''}>
-                        ${isOutOfStock ? '[ OUT OF STOCK ]' : '+ ADD TO CART'}
-                    </button>
+                <div class="product-title">${prod.title}</div>
+                <div class="product-desc">${prod.desc}</div>
+            </div>
+            <div class="product-footer">
+                <div class="price-row">
+                    <span class="price">${priceFormatted}</span>
+                    <span style="font-size:10px; font-weight:bold; color:${stockColor};">${stockText}</span>
                 </div>
-            `;
+                <button class="add-btn" onclick="addToCart(${prod.id})" ${isOutOfStock ? 'disabled style="background:#222; color:#ff4d4d; border:1px solid #444; cursor:not-allowed;"' : ''}>
+                    ${isOutOfStock ? '[ OUT OF STOCK ]' : '+ ADD TO CART'}
+                </button>
+            </div>
+        `;
         grid.appendChild(card);
     });
     document.getElementById('item-counter').textContent = `${visibleCount} items`;
@@ -196,11 +203,11 @@ function renderCart() {
         const subtotalItem = product.prices[currentCurrency] * item.qty;
         total += subtotalItem;
         html += `
-                <div class="cart-item-row">
-                    <span><strong>${item.qty}x</strong> ${product.title}</span>
-                    <span>${formatMoney(subtotalItem)} <span class="remove-item" onclick="removeOneFromCart(${item.id})">[-]</span></span>
-                </div>
-            `;
+            <div class="cart-item-row">
+                <span><strong>${item.qty}x</strong> ${product.title}</span>
+                <span>${formatMoney(subtotalItem)} <span class="remove-item" onclick="removeOneFromCart(${item.id})">[-]</span></span>
+            </div>
+        `;
     });
     container.innerHTML = html;
     totalEl.textContent = formatMoney(total);
@@ -324,7 +331,7 @@ async function finishOrder(e) {
     } catch (err) {
         alert("Connection error.");
     } finally {
-        submitBtn.disabled.value = false;
+        submitBtn.disabled = false;
         submitBtn.textContent = "[ SEND ORDER ]";
     }
 }
