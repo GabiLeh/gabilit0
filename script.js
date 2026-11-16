@@ -1,26 +1,27 @@
 const DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/1571679844792795136/3ogd0zsjhy_3Dh7OG4BJgpDXB5gw-9UBXfBY2PNwrl4FtGwknCfBfoIJzJComFEmJiXH";
-const SUPABASE_URL = "COLE_SUA_PROJECT_URL_DO_SUPABASE_AQUI";
+const SUPABASE_URL = "https://dyuqpfsiximnessphbqz.supabase.co/rest/v1/";
 const SUPABASE_KEY = "sb_publishable_TmMgGbPf1P8ME1YYLQdVfw_Xv7IQkEV";
 
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let db = null;
+if (SUPABASE_URL.startsWith("http")) {
+    db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
 const productsData = [
     {
         id: 1,
         category: "micangas",
-        badge: "",
-        title: 'PHONE CHAIN "A THOUSAND SUNS"',
-        desc: "A handmade beaded phone chain inspired by the album A Thousand Suns.",
+        badge: "", title: 'PHONE CHAIN "A THOUSAND SUNS"',
+        desc: "A handmade beaded phone chain inspired by A Thousand Suns.",
         prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
         stock: 1,
-        img: "ATSphonechain.jpg"
-    },
+        img: "ATSphonechain.jpg" },
     {
         id: 2,
         category: "micangas",
         badge: "",
         title: 'PHONE CHAIN "FROM ZERO"',
-        desc: "A handmade beaded phone chain inspired by the album From Zero.",
+        desc: "A handmade beaded phone chain inspired by From Zero.",
         prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
         stock: 1,
         img: "FZphonechain.jpg"
@@ -33,14 +34,13 @@ const productsData = [
         desc: "A handmade beaded bracelet inspired by the 1997 Xero demo.",
         prices: { BRL: 15.00, USD: 4.00, EUR: 3.50 },
         stock: 1,
-        img: "Xpulseira.jpg"
-    },
+        img: "Xpulseira.jpg" },
     {
         id: 4,
         category: "pulseiras",
         badge: "1 OF 1",
         title: 'BRACELET "ONE STEP CLOSER"',
-        desc: "A handmade beaded bracelet inspired by the track One Step Closer.",
+        desc: "A handmade beaded bracelet inspired by One Step Closer.",
         prices: { BRL: 18.00, USD: 4.50, EUR: 4.00 },
         stock: 1,
         img: "OSCpulseira.jpg"
@@ -50,7 +50,7 @@ const productsData = [
         category: "chaveiros",
         badge: "CUSTOM",
         title: 'CUSTOM PHOTO / ALBUM KEYCHAIN',
-        desc: "Made to order! Send me your favorite album cover or photo on Discord after checkout",
+        desc: "Made to order! Send me your favorite album cover or photo on Discord.",
         prices: { BRL: 25.00, USD: 6.50, EUR: 6.00 },
         stock: 5,
         img: "customkeychain.jpg"
@@ -63,11 +63,7 @@ let currentFilter = 'all';
 let calculatedShippingCost = 0;
 let shippingServiceLabel = "";
 
-const currencySymbols = {
-    'USD': '$ ',
-    'EUR': '€ ',
-    'BRL': 'R$ '
-};
+const currencySymbols = { 'USD': '$ ', 'EUR': '€ ', 'BRL': 'R$ ' };
 
 function formatMoney(amount) {
     const symbol = currencySymbols[currentCurrency];
@@ -75,20 +71,12 @@ function formatMoney(amount) {
 }
 
 async function carregarEstoqueReal() {
-    if (!SUPABASE_URL.startsWith("http")) return;
-
+    if (!db) return;
     const { data, error } = await db.from('estoque').select('*');
-    if (error) {
-        console.error("Erro ao buscar estoque:", error);
-        return;
-    }
-
     if (data) {
         data.forEach(itemBanco => {
             const prod = productsData.find(p => p.id === itemBanco.id);
-            if (prod) {
-                prod.stock = itemBanco.stock;
-                }
+            if (prod) prod.stock = itemBanco.stock;
         });
         renderProducts();
     }
@@ -106,53 +94,42 @@ function renderProducts() {
         const inCartItem = cart.find(c => c.id === prod.id);
         const qtyInCart = inCartItem ? inCartItem.qty : 0;
         const remainingStock = prod.stock - qtyInCart;
-
         const isOutOfStock = remainingStock <= 0;
         const priceFormatted = formatMoney(prod.prices[currentCurrency]);
 
         let stockText = `[Stock: ${remainingStock}]`;
         let stockColor = "#aaa";
-        if (isOutOfStock) {
-            stockText = "OUT OF STOCK";
-            stockColor = "#ff4d4d";
-        } else if (remainingStock === 1) {
-            stockText = "[Last 1!]";
-            stockColor = "#ffae00";
-        }
+        if (isOutOfStock) { stockText = "OUT OF STOCK"; stockColor = "#ff4d4d"; }
+        else if (remainingStock === 1) { stockText = "[Last 1!]"; stockColor = "#ffae00"; }
 
-        let badgeHtml = '';
-        if (prod.stock === 0) {
-            badgeHtml = `<span class="tag-badge" style="background:#333; color:#ff4d4d; border:1px solid #ff4d4d;">SOLD OUT</span>`;
-        } else if (prod.badge) {
-            badgeHtml = `<span class="tag-badge">${prod.badge}</span>`;
-        }
+        let badgeHtml = prod.stock === 0 ? `<span class="tag-badge" style="background:#333; color:#ff4d4d;">SOLD OUT</span>` : (prod.badge ? `<span class="tag-badge">${prod.badge}</span>` : '');
 
         const card = document.createElement('div');
         card.className = 'product-card';
         if (prod.stock === 0) card.style.opacity = '0.65';
 
         card.innerHTML = `
-            <div>
-                <div class="product-img" style="overflow: hidden; position: relative; padding: 0;">
-                    ${badgeHtml}
-                    <img src="${prod.img}" alt="${prod.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                <div>
+                    <div class="product-img">
+                        ${badgeHtml}
+                        <img src="${prod.img}" alt="${prod.title}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span style="display:none; font-size:10px;">[ IMG_${prod.id}.JPG ]</span>
+                    </div>
+                    <div class="product-title">${prod.title}</div>
+                    <div class="product-desc">${prod.desc}</div>
                 </div>
-                <div class="product-title">${prod.title}</div>
-                <div class="product-desc">${prod.desc}</div>
-            </div>
-            <div class="product-footer">
-                <div class="price-row">
-                    <span class="price">${priceFormatted}</span>
-                    <span style="font-size:10px; font-weight:bold; color:${stockColor};">${stockText}</span>
+                <div class="product-footer">
+                    <div class="price-row">
+                        <span class="price">${priceFormatted}</span>
+                        <span style="font-size:10px; font-weight:bold; color:${stockColor};">${stockText}</span>
+                    </div>
+                    <button class="add-btn" onclick="addToCart(${prod.id})" ${isOutOfStock ? 'disabled style="background:#222; color:#ff4d4d; border:1px solid #444; cursor:not-allowed;"' : ''}>
+                        ${isOutOfStock ? '[ OUT OF STOCK ]' : '+ ADD TO CART'}
+                    </button>
                 </div>
-                <button class="add-btn" onclick="addToCart(${prod.id})" ${isOutOfStock ? 'disabled style="background:#222; color:#ff4d4d; border:1px solid #444; cursor:not-allowed;"' : ''}>
-                    ${isOutOfStock ? '[ OUT OF STOCK ]' : '+ ADD TO CART'}
-                </button>
-            </div>
-        `;
+            `;
         grid.appendChild(card);
     });
-
     document.getElementById('item-counter').textContent = `${visibleCount} items`;
 }
 
@@ -175,20 +152,16 @@ function filterProducts(category, btn) {
 function addToCart(productId) {
     const product = productsData.find(p => p.id === productId);
     if (!product) return;
-
     const existingItem = cart.find(c => c.id === productId);
     const currentQty = existingItem ? existingItem.qty : 0;
 
     if (currentQty >= product.stock) {
-        alert(`Out of stock! Only ${product.stock} unit(s) available for "${product.title}".`);
+        alert(`Out of stock! Only ${product.stock} unit(s) available.`);
         return;
     }
 
-    if (existingItem) {
-        existingItem.qty += 1;
-    } else {
-        cart.push({ id: productId, qty: 1 });
-    }
+    if (existingItem) existingItem.qty += 1;
+    else cart.push({ id: productId, qty: 1 });
 
     renderProducts();
     renderCart();
@@ -197,13 +170,8 @@ function addToCart(productId) {
 function removeOneFromCart(productId) {
     const idx = cart.findIndex(c => c.id === productId);
     if (idx === -1) return;
-
-    if (cart[idx].qty > 1) {
-        cart[idx].qty -= 1;
-    } else {
-        cart.splice(idx, 1);
-    }
-
+    if (cart[idx].qty > 1) cart[idx].qty -= 1;
+    else cart.splice(idx, 1);
     renderProducts();
     renderCart();
 }
@@ -212,7 +180,6 @@ function renderCart() {
     const container = document.getElementById('cart-items');
     const totalEl = document.getElementById('cart-total');
     const headerCount = document.getElementById('header-count');
-
     const totalUnits = cart.reduce((sum, item) => sum + item.qty, 0);
     headerCount.textContent = totalUnits;
 
@@ -224,20 +191,17 @@ function renderCart() {
 
     let html = '';
     let total = 0;
-
     cart.forEach(item => {
         const product = productsData.find(p => p.id === item.id);
         const subtotalItem = product.prices[currentCurrency] * item.qty;
         total += subtotalItem;
-
         html += `
-            <div class="cart-item-row">
-                <span><strong>${item.qty}x</strong> ${product.title}</span>
-                <span>${formatMoney(subtotalItem)} <span class="remove-item" title="Remove 1" onclick="removeOneFromCart(${item.id})">[-]</span></span>
-            </div>
-        `;
+                <div class="cart-item-row">
+                    <span><strong>${item.qty}x</strong> ${product.title}</span>
+                    <span>${formatMoney(subtotalItem)} <span class="remove-item" onclick="removeOneFromCart(${item.id})">[-]</span></span>
+                </div>
+            `;
     });
-
     container.innerHTML = html;
     totalEl.textContent = formatMoney(total);
 }
@@ -245,11 +209,7 @@ function renderCart() {
 function calcularFretePorDistancia() {
     const inputVal = document.getElementById('user-cep').value.trim();
     const resEl = document.getElementById('shipping-result');
-
-    if (!inputVal) {
-        alert("Please enter a valid ZIP code or CEP.");
-        return;
-    }
+    if (!inputVal) { alert("Please enter a valid ZIP code or CEP."); return; }
 
     let costUSD = 12.00;
     let serviceName = "Intl Tracked Airmail";
@@ -257,38 +217,20 @@ function calcularFretePorDistancia() {
 
     if (cleanInput.length === 8 && (inputVal.includes('-') || !/[a-zA-Z]/.test(inputVal))) {
         const prefix = cleanInput.substring(0, 2);
-        if (['01','02','03','04','05','06','07','08','09','11','12','13','14','15','16','17','18','19'].includes(prefix)) {
-            costUSD = 3.50;
-            serviceName = "Correios SEDEX (SP State)";
-        } else if (prefix.startsWith('8') || prefix.startsWith('9')) {
-            costUSD = 5.50;
-            serviceName = "Correios PAC (South BR)";
-        } else if (prefix.startsWith('6') || prefix.startsWith('7')) {
-            costUSD = 7.00;
-            serviceName = "Correios PAC (North/Midwest BR)";
+        if (['01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '14', '15', '16', '17', '18', '19'].includes(prefix)) {
+            costUSD = 3.50; serviceName = "Correios SEDEX (SP State)";
         } else {
-            costUSD = 6.00;
-            serviceName = "Correios PAC (Northeast/Other BR)";
+            costUSD = 6.00; serviceName = "Correios PAC (BR)";
         }
     } else {
-        const firstChar = inputVal.toUpperCase().charAt(0);
-        if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(firstChar)) {
-            costUSD = 12.50;
-            serviceName = "USPS / Canada First Class";
-        } else if (['W', 'E', 'N', 'S', 'B', 'M', 'G', 'F', 'D'].some(p => inputVal.toUpperCase().startsWith(p))) {
-            costUSD = 14.00;
-            serviceName = "European Tracked Airmail";
-        } else {
-            costUSD = 16.50;
-            serviceName = "Worldwide Airmail Express";
-        }
+        costUSD = 12.50; serviceName = "USPS / International Airmail";
     }
 
-    let finalShippingCost = costUSD;
-    if (currentCurrency === 'EUR') finalShippingCost = costUSD * 0.92;
-    if (currentCurrency === 'BRL') finalShippingCost = costUSD * 5.20;
+    let finalCost = costUSD;
+    if (currentCurrency === 'EUR') finalCost = costUSD * 0.92;
+    if (currentCurrency === 'BRL') finalCost = costUSD * 5.20;
 
-    calculatedShippingCost = finalShippingCost;
+    calculatedShippingCost = finalCost;
     shippingServiceLabel = serviceName;
     resEl.textContent = `✓ ${serviceName}: ${formatMoney(calculatedShippingCost)}`;
     updateModalTotals();
@@ -297,26 +239,18 @@ function calcularFretePorDistancia() {
 function updateModalTotals() {
     const summary = document.getElementById('modal-summary');
     let subtotal = 0;
-
     const lines = cart.map(item => {
         const product = productsData.find(p => p.id === item.id);
         const itemTotal = product.prices[currentCurrency] * item.qty;
         subtotal += itemTotal;
         return `• <strong>${item.qty}x</strong> ${product.title} - ${formatMoney(itemTotal)}`;
     });
-
     const total = subtotal + calculatedShippingCost;
-
-    summary.innerHTML = lines.join('<br>') +
-        `<br><br>Shipping: ${formatMoney(calculatedShippingCost)}` +
-        `<br><strong style="color:#00ff41;">TOTAL: ${formatMoney(total)} (${currentCurrency})</strong>`;
+    summary.innerHTML = lines.join('<br>') + `<br><br>Shipping: ${formatMoney(calculatedShippingCost)}` + `<br><strong style="color:#00ff41;">TOTAL: ${formatMoney(total)} (${currentCurrency})</strong>`;
 }
 
 function openCheckout() {
-    if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-    }
+    if (cart.length === 0) { alert("Your cart is empty!"); return; }
     calculatedShippingCost = 0;
     document.getElementById('user-cep').value = '';
     document.getElementById('shipping-result').textContent = "Enter postal code to calculate shipping.";
@@ -324,9 +258,7 @@ function openCheckout() {
     document.getElementById('checkout-modal').style.display = 'flex';
 }
 
-function closeCheckout() {
-    document.getElementById('checkout-modal').style.display = 'none';
-}
+function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
 
 async function finishOrder(e) {
     e.preventDefault();
@@ -334,15 +266,8 @@ async function finishOrder(e) {
     const postalVal = document.getElementById('user-cep').value.trim();
     const submitBtn = document.getElementById('submit-order-btn');
 
-    if (calculatedShippingCost === 0) {
-        alert("Please calculate your shipping by entering your ZIP code or CEP first!");
-        return;
-    }
-
-    if (!DISCORD_WEBHOOK_URL || !DISCORD_WEBHOOK_URL.startsWith("http")) {
-        alert("⚠️ Webhook URL not configured properly!");
-        return;
-    }
+    if (calculatedShippingCost === 0) { alert("Please calculate your shipping first!"); return; }
+    if (!DISCORD_WEBHOOK_URL.startsWith("http")) { alert("⚠️ Webhook URL not configured!"); return; }
 
     let subtotal = 0;
     let itemsListText = cart.map(item => {
@@ -356,7 +281,7 @@ async function finishOrder(e) {
     const shipFormatted = formatMoney(calculatedShippingCost);
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "[ SENDING TO DISCORD... ]";
+    submitBtn.textContent = "[ SENDING... ]";
 
     const payload = {
         username: "gabilit0 Store BOT",
@@ -371,36 +296,35 @@ async function finishOrder(e) {
                 { name: "🚚 Shipping", value: `${shippingServiceLabel} — **${shipFormatted}**`, inline: false },
                 { name: "💰 TOTAL", value: `**${totalFormatted}**`, inline: false }
             ],
-            footer: { text: "gabilit0 Store // Add the customer on Discord to confirm payment!" },
             timestamp: new Date().toISOString()
         }]
     };
 
     try {
         const response = await fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
         });
 
         if (response.ok) {
-            cart.forEach(item => {
-                const product = productsData.find(p => p.id === item.id);
-                if (product) product.stock -= item.qty;
-            });
-
-            alert(`✓ Order sent successfully!\n\nKeep an eye on your Discord friend requests (${contactInfo}). I will message you soon with payment details!`);
-            cart = [];
-            renderProducts();
-            renderCart();
-            closeCheckout();
+            if (db) {
+                for (const item of cart) {
+                    const product = productsData.find(p => p.id === item.id);
+                    if (product) {
+                        const novoEstoque = Math.max(0, product.stock - item.qty);
+                        product.stock = novoEstoque;
+                        await db.from('estoque').update({ stock: novoEstoque }).eq('id', product.id);
+                    }
+                }
+            }
+            alert(`✓ Order sent successfully! I will message you soon on Discord (${contactInfo}).`);
+            cart = []; renderProducts(); renderCart(); closeCheckout();
         } else {
-            alert("Error sending order to Discord. Please check the Webhook URL.");
+            alert("Error sending order to Discord.");
         }
     } catch (err) {
-        alert("Connection error while sending order.");
+        alert("Connection error.");
     } finally {
-        submitBtn.disabled = false;
+        submitBtn.disabled.value = false;
         submitBtn.textContent = "[ SEND ORDER ]";
     }
 }
