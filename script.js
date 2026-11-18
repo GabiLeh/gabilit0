@@ -1,6 +1,6 @@
 const dP1 = "https://discordapp.com/api/webhooks/"
-const dP2 = ""
-const dP3 = ""
+const dP2 = "1572605443576963185"
+const dP3 = "/oG-ugGw4YI1nOChlXBRMylj7g3I30ZCTP2C7nW611yfjLTPHA2fziSLBi6S2uAMebtk6"
 const DISCORD_WEBHOOK_URL = dP1 + dP2 + dP3;
 const SUPABASE_URL = "https://dyuqpfsiximnessphbqz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_TmMgGbPf1P8ME1YYLQdVfw_Xv7IQkEV";
