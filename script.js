@@ -1,4 +1,7 @@
-const DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/1571679844792795136/3ogd0zsjhy_3Dh7OG4BJgpDXB5gw-9UBXfBY2PNwrl4FtGwknCfBfoIJzJComFEmJiXH";
+const dP1 = "https://discordapp.com/api/webhooks/"
+const dP2 = ""
+const dP3 = ""
+const DISCORD_WEBHOOK_URL = dP1 + dP2 + dP3;
 const SUPABASE_URL = "https://dyuqpfsiximnessphbqz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_TmMgGbPf1P8ME1YYLQdVfw_Xv7IQkEV";
 
@@ -14,7 +17,7 @@ const productsData = [
         badge: "",
         title: 'PHONE CHAIN "A THOUSAND SUNS"',
         desc: "A phone chain inspired by A Thousand Suns",
-        prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
+        prices: { BRL: 15.00, USD: 3.50, EUR: 3.00 },
         stock: 1,
         img: "ATSphonechain.jpg"
     },
@@ -24,7 +27,7 @@ const productsData = [
         badge: "",
         title: 'PHONE CHAIN "FROM ZERO"',
         desc: "A phone chain inspired by From Zero",
-        prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
+        prices: { BRL: 15.00, USD: 3.50, EUR: 3.00 },
         stock: 1,
         img: "FZphonechain.jpg"
     },
@@ -34,7 +37,7 @@ const productsData = [
         badge: "SIZE S/M (P/M)",
         title: 'BRACELET "XERO"',
         desc: "A bracelet inspired by Xero",
-        prices: { BRL: 15.00, USD: 4.00, EUR: 3.50 },
+        prices: { BRL: 10.00, USD: 2.50, EUR: 2.00 },
         stock: 1,
         img: "Xpulseira.jpg"
     },
@@ -44,7 +47,7 @@ const productsData = [
         badge: "1 OF 1",
         title: 'BRACELET "ONE STEP CLOSER"',
         desc: "A bracelet inspired by One Step Closer",
-        prices: { BRL: 18.00, USD: 4.50, EUR: 4.00 },
+        prices: { BRL: 13.00, USD: 3.00, EUR: 2.80 },
         stock: 1,
         img: "OSCpulseira.jpg"
     },
@@ -54,27 +57,27 @@ const productsData = [
         badge: "CUSTOM",
         title: 'CUSTOM PHOTO / ALBUM KEYCHAIN',
         desc: "Made to order! Send me your favorite album cover or photo on Discord",
-        prices: { BRL: 25.00, USD: 6.50, EUR: 6.00 },
+        prices: { BRL: 12.00, USD: 3.00, EUR: 2.50 },
         stock: 5,
         img: "customkeychain.jpg"
     },
     {
         id: 6,
-        category: "micangas",
+        category: "chaveiros",
         badge: "",
-        title: 'PHONE CHAIN "METEORA"',
-        desc: "A phone chain inspired by the album METEORA",
-        prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
+        title: 'KEYCHAIN "METEORA"',
+        desc: "A keychain inspired by METEORA",
+        prices: { BRL: 8.00, USD: 2.00, EUR: 1.80 },
         stock: 1,
-        img: "Mphonechain.jpg"
+        img: "Mkeychain.jpg"
     },
-{
-        id: 6,
+    {
+        id: 7,
         category: "pulseiras",
         badge: "SIZE S (P)",
         title: 'BRACELET "DEAD BY SUNRISE"',
         desc: "A bracelet inspired by Dead by Sunrise",
-        prices: { BRL: 15.00, USD: 4.00, EUR: 3.50 },
+        prices: { BRL: 10.00, USD: 2.50, EUR: 2.00 },
         stock: 1,
         img: "DBSpulseira.jpg"
     }
