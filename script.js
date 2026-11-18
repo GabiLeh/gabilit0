@@ -13,7 +13,7 @@ const productsData = [
         category: "micangas",
         badge: "",
         title: 'PHONE CHAIN "A THOUSAND SUNS"',
-        desc: "A handmade beaded phone chain inspired by A Thousand Suns.",
+        desc: "A phone chain inspired by A Thousand Suns",
         prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
         stock: 1,
         img: "ATSphonechain.jpg"
@@ -23,7 +23,7 @@ const productsData = [
         category: "micangas",
         badge: "",
         title: 'PHONE CHAIN "FROM ZERO"',
-        desc: "A handmade beaded phone chain inspired by From Zero.",
+        desc: "A phone chain inspired by From Zero",
         prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
         stock: 1,
         img: "FZphonechain.jpg"
@@ -31,9 +31,9 @@ const productsData = [
     {
         id: 3,
         category: "pulseiras",
-        badge: "",
+        badge: "SIZE S/M (P/M)",
         title: 'BRACELET "XERO"',
-        desc: "A handmade beaded bracelet inspired by the 1997 Xero demo.",
+        desc: "A bracelet inspired by Xero",
         prices: { BRL: 15.00, USD: 4.00, EUR: 3.50 },
         stock: 1,
         img: "Xpulseira.jpg"
@@ -43,7 +43,7 @@ const productsData = [
         category: "pulseiras",
         badge: "1 OF 1",
         title: 'BRACELET "ONE STEP CLOSER"',
-        desc: "A handmade beaded bracelet inspired by One Step Closer.",
+        desc: "A bracelet inspired by One Step Closer",
         prices: { BRL: 18.00, USD: 4.50, EUR: 4.00 },
         stock: 1,
         img: "OSCpulseira.jpg"
@@ -53,10 +53,30 @@ const productsData = [
         category: "chaveiros",
         badge: "CUSTOM",
         title: 'CUSTOM PHOTO / ALBUM KEYCHAIN',
-        desc: "Made to order! Send me your favorite album cover or photo on Discord.",
+        desc: "Made to order! Send me your favorite album cover or photo on Discord",
         prices: { BRL: 25.00, USD: 6.50, EUR: 6.00 },
         stock: 5,
         img: "customkeychain.jpg"
+    },
+    {
+        id: 6,
+        category: "micangas",
+        badge: "",
+        title: 'PHONE CHAIN "METEORA"',
+        desc: "A phone chain inspired by the album METEORA",
+        prices: { BRL: 22.00, USD: 5.50, EUR: 5.00 },
+        stock: 1,
+        img: "Mphonechain.jpg"
+    },
+{
+        id: 6,
+        category: "pulseiras",
+        badge: "SIZE S (P)",
+        title: 'BRACELET "DEAD BY SUNRISE"',
+        desc: "A bracelet inspired by Dead by Sunrise",
+        prices: { BRL: 15.00, USD: 4.00, EUR: 3.50 },
+        stock: 1,
+        img: "DBSpulseira.jpg"
     }
 ];
 
